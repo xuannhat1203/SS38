@@ -11,7 +11,7 @@ export default function UseReducerDefferent() {
     todos: [],
     isloading: false,
     todo: {
-      id: Math.floor(Math.random() * 100 + new Date().getMilliseconds()),
+      id: 0,
       name: "",
       status: false,
     },
@@ -24,10 +24,29 @@ export default function UseReducerDefferent() {
     };
   };
   // khởi tạo hàm reducer
-  const reducer = (state = initial, action: any) => {
+  const reducer = (state: any = initial, action: any) => {
     switch (action.type) {
       case "CHANGEINPUT":
-        return { ...state, todo: { ...state.todo, name: action.payload } };
+        return {
+          ...state,
+          todo: {
+            ...state.todo,
+            name: action.payload,
+          },
+        };
+      case "ADD_JOB":
+        return {
+          ...state,
+          todos: [
+            ...state.todos,
+            {
+              ...action.payload,
+              id: Math.floor(
+                Math.random() * 100 + new Date().getMilliseconds()
+              ),
+            },
+          ],
+        };
       default:
         return { ...state, todo: { ...state.todo, name: action.payload } };
     }
@@ -38,6 +57,11 @@ export default function UseReducerDefferent() {
     let inputValue = e.target.value;
     dispat(action("CHANGEINPUT", inputValue));
   };
+  //   hàm thêm công việc
+  const addTodo = () => {
+    dispat(action("ADD_JOB", state.todo));
+    console.log(state.todo);
+  };
   return (
     <div>
       <p>UseReducer nâng cao</p>
@@ -46,7 +70,7 @@ export default function UseReducerDefferent() {
         type="text"
         placeholder="Nhập tên công việc"
       />
-      <button onClick={handleButton}>ADD NEW JOB</button>
+      <button onClick={addTodo}>ADD NEW JOB</button>
       <p>Danh sách công việc</p>
       <ul>
         {state.todos.map((item: Todo) => {
